@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-import jwt from "jasonwebtoken";
+const jwt = require("jsonwebtoken");
 const { db } = require("../db.js");
 const date = new Date();
 
@@ -33,7 +33,7 @@ const auth = {
     const values = [req.body.username];
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.length == 0) return res.status(404).json("User not found!");
+      if (data.length === 0) return res.status(404).json("User not found!");
 
       const isPasswordCorrect = bcrypt.compareSync(
         req.body.password,
@@ -47,13 +47,19 @@ const auth = {
 
       const { password, ...other } = data[0];
 
-      res
+      return res
         .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json(other);
     });
   },
-  logout: (req, res) => {},
+  logout: (req, res) => {
+     return res.cookie("access_token",{
+        same_site : "none",
+        secure : true
+     }).status(200)
+     .json("User has been successfully logged out");
+  },
 };
 
 module.exports = { auth };

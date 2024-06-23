@@ -1,11 +1,13 @@
 const express= require("express");
-const postRoutes = require("./routes/posts.js");
-const  authRoutes= require("./routes/auth.js");
+const postRoutes = require("./routes/routes.posts.js");
+const  authRoutes= require("./routes/routes.auth.js");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 app.use('/api/posts',postRoutes);
 app.use('/api/auth',authRoutes);
 
